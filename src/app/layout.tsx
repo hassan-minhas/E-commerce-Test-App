@@ -56,7 +56,7 @@ export default function RootLayout({
                 href="/cart"
                 className="text-gray-700 hover:text-blue-600 font-medium"
               >
-                Cart (0)
+                Cart
               </Link>
             </div>
           </nav>
@@ -66,7 +66,7 @@ export default function RootLayout({
           {children}
         </main>
 
-        <footer className="bg-white border-t border-gray-200">
+        <footer className="bg-white border-t border-gray-200 mt-8">
           <div className="mx-4 sm:mx-6 md:mx-8 lg:mx-auto max-w-7xl py-8">
             <p className="text-center text-gray-500">
               © 2025 NextCart. All rights reserved.
