@@ -4,6 +4,7 @@ import { useRef, useState } from "react";
 import Loader from "@/components/Loader";
 import ProductItem from "@/components/ProductItem";
 import { Product } from "@/types";
+import { Waypoint } from "react-waypoint";
 
 export default function ProductsPage() {
   const productsPerPage = 8;
@@ -36,6 +37,7 @@ export default function ProductsPage() {
     }
   };
 
+  // Initial load
   useState(() => {
     if (products.length === 0 && !firstLoading.current) {
       firstLoading.current = true;
@@ -56,17 +58,13 @@ export default function ProductsPage() {
       </div>
       <div className="mt-8 flex flex-col gap-8 justify-center">
         {loading && <Loader />}
-        {!allLoaded && products.length > 0 && (
-          <button
-            onClick={loadMore}
-            disabled={loading}
-            className="mx-auto px-6 py-3 w-40 bg-blue-600 text-white rounded-md font-semibold hover:bg-blue-700 transition disabled:opacity-50"
-          >
-            {loading ? "Loading..." : "Load More"}
-          </button>
+        {!allLoaded && !loading && products.length > 0 && (
+          <Waypoint onEnter={loadMore} />
         )}
         {allLoaded && (
-          <span className="text-gray-500">No more products to load.</span>
+          <span className="text-gray-500 mx-auto mt-12">
+            No more products to load.
+          </span>
         )}
       </div>
     </div>
