@@ -14,8 +14,8 @@ const ProductItem = ({ product }: ProductItemProps) => {
     >
       <div className="relative aspect-square w-full bg-gray-50">
         <Image
-          src={product.image}
-          alt={product.name || "Product image"}
+          src={product?.images?.[0]}
+          alt={product.title || "Product image"}
           fill
           className="object-contain p-6"
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
@@ -23,12 +23,12 @@ const ProductItem = ({ product }: ProductItemProps) => {
       </div>
       <div className="p-4 flex-1 flex flex-col">
         <h3 className="text-lg font-semibold text-gray-900 group-hover:text-blue-600 transition">
-          {product.name}
+          {product.title}
         </h3>
-        <span className="mt-2 text-xl font-bold text-gray-800">
+        <span className="mt-auto text-xl font-bold text-gray-800">
           ${product.price.toFixed(2)}
         </span>
-        <span className="mt-auto pt-4">
+        <span className="mt-2 pt-4">
           <span className="inline-block bg-blue-50 text-blue-700 text-xs px-3 py-1 rounded-full">
             Free Shipping
           </span>

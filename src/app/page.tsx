@@ -1,25 +1,20 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import Loader from "@/components/Loader";
 import ProductItem from "@/components/ProductItem";
 import { Product } from "@/types";
+import { useFetch } from "@/hooks/useFetch";
 
 export default function HomePage() {
-  const [products, setProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}products`)
-      .then((res) => res.json())
-      .then((data) => {
-        setProducts(data);
-        setLoading(false);
-      })
-      .catch(() => setLoading(false));
-  }, []);
+  const {
+    data: products,
+    loading,
+    error,
+  } = useFetch<Product[]>(
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/products?offset=0&limit=8`
+  );
 
   return (
     <div className="flex flex-col gap-12">
@@ -63,11 +58,13 @@ export default function HomePage() {
             Show All
           </Link>
         </div>
-        {loading ? (
+        {error ? (
+          <div className="text-red-600">Error: {error.message}</div>
+        ) : loading ? (
           <Loader />
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {products.slice(0, 4).map((product) => (
+            {products?.map((product) => (
               <ProductItem key={product.id} product={product} />
             ))}
           </div>
