@@ -1,5 +1,5 @@
 import { Product } from "@/types";
-import Image from "next/image";
+import LazyImage from "./LazyImage";
 import Link from "next/link";
 
 type ProductItemProps = {
@@ -21,12 +21,10 @@ const ProductItem = ({
     <div className="group bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-shadow flex flex-col transform hover:-translate-y-1 hover:scale-[1.025] duration-200">
       <Link href={`/products/${product.id}`} className="flex-1 flex flex-col">
         <div className="relative aspect-square w-full bg-gray-50 overflow-hidden">
-          <Image
+          <LazyImage
             src={product?.images?.[0]}
             alt={product.title || "Product image"}
-            fill
             className="object-contain p-6 transition-transform duration-300 group-hover:scale-105"
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
           />
         </div>
         <div className="p-5 flex-1 flex flex-col">

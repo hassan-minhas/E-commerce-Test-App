@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
+import LazyImage from "@/components/LazyImage";
 import Loader from "@/components/Loader";
 import { Product } from "@/types";
 import { useParams } from "next/navigation";
@@ -68,14 +68,18 @@ export default function ProductPage() {
             onMouseEnter={() => setIsZoomed(true)}
             onMouseLeave={() => setIsZoomed(false)}
           >
-            <Image
+            <LazyImage
               src={product?.images[selectedImageIndex] || ""}
               alt={product.title}
-              fill
               className={`object-contain transition-transform duration-300 ${
                 isZoomed ? "scale-150" : "scale-100"
               }`}
-              sizes="(max-width: 768px) 100vw, 50vw"
+              style={{
+                width: "100%",
+                height: "100%",
+                position: "absolute",
+                inset: 0,
+              }}
             />
           </div>
 
@@ -91,11 +95,16 @@ export default function ProductPage() {
                 }`}
                 aria-label={`Show image ${index + 1}`}
               >
-                <Image
+                <LazyImage
                   src={img}
                   alt={`${product.title} thumbnail ${index + 1}`}
-                  fill
                   className="object-cover"
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    position: "absolute",
+                    inset: 0,
+                  }}
                 />
               </button>
             ))}
@@ -115,7 +124,9 @@ export default function ProductPage() {
           {!addedToCart && (
             <>
               <div>
-                <h3 className="text-sm font-semibold text-gray-900 mb-2">Size</h3>
+                <h3 className="text-sm font-semibold text-gray-900 mb-2">
+                  Size
+                </h3>
                 <div className="flex gap-2">
                   {sizes.map((size) => (
                     <button
@@ -212,7 +223,9 @@ export default function ProductPage() {
                     </span>
                     <span
                       className={`ml-2 transform transition-transform group-hover:text-blue-600 ${
-                        expandedSection === section ? "rotate-180 text-blue-600" : "text-gray-400"
+                        expandedSection === section
+                          ? "rotate-180 text-blue-600"
+                          : "text-gray-400"
                       }`}
                     >
                       ▼

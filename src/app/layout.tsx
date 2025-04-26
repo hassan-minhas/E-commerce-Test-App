@@ -6,6 +6,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { CartProvider } from "@/context/CartContext";
 import { useState } from "react";
+import ErrorBoundary from "@/components/ErrorBoundary";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -151,7 +152,9 @@ export default function RootLayout({
           </header>
 
           <main className="min-h-[calc(100vh-112px)] bg-transparent px-4 md:px-6 lg:mx-auto max-w-7xl">
-            {children}
+            <ErrorBoundary>
+              {children}
+            </ErrorBoundary>
           </main>
 
           <footer className="bg-white/80 backdrop-blur-md border-t border-gray-100 mt-8 shadow-inner">
