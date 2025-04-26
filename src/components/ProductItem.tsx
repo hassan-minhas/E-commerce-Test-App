@@ -18,26 +18,26 @@ const ProductItem = ({
   isAddedToCart,
 }: ProductItemProps) => {
   return (
-    <div className="group bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm hover:shadow-lg transition-shadow flex flex-col">
+    <div className="group bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-shadow flex flex-col transform hover:-translate-y-1 hover:scale-[1.025] duration-200">
       <Link href={`/products/${product.id}`} className="flex-1 flex flex-col">
-        <div className="relative aspect-square w-full bg-gray-50">
+        <div className="relative aspect-square w-full bg-gray-50 overflow-hidden">
           <Image
             src={product?.images?.[0]}
             alt={product.title || "Product image"}
             fill
-            className="object-contain p-6"
+            className="object-contain p-6 transition-transform duration-300 group-hover:scale-105"
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
           />
         </div>
-        <div className="p-4 flex-1 flex flex-col">
-          <h3 className="text-lg font-semibold text-gray-900 group-hover:text-blue-600 transition">
+        <div className="p-5 flex-1 flex flex-col">
+          <h3 className="text-lg font-bold text-gray-900 group-hover:text-blue-600 transition mb-2 line-clamp-2">
             {product.title}
           </h3>
-          <span className="mt-auto text-xl font-bold text-gray-800">
+          <span className="text-2xl font-extrabold text-blue-700 mb-2">
             ${product.price.toFixed(2)}
           </span>
-          <span className="mt-2 pt-4">
-            <span className="inline-block bg-blue-50 text-blue-700 text-xs px-3 py-1 rounded-full">
+          <span className="mt-auto pt-3">
+            <span className="inline-block bg-blue-50 text-blue-700 text-xs px-3 py-1 rounded-full font-medium shadow-sm">
               Free Shipping
             </span>
           </span>
@@ -46,7 +46,7 @@ const ProductItem = ({
       {showAddToCartCta &&
         (isAddedToCart ? (
           <button
-            className="bg-red-600 text-white py-2 px-4 m-4 rounded hover:bg-red-700 transition-colors cursor-pointer"
+            className="bg-red-600 text-white py-2 px-4 m-4 rounded-lg hover:bg-red-700 transition-colors cursor-pointer font-semibold shadow"
             onClick={() => onRemoveFromCart(product)}
             type="button"
           >
@@ -56,7 +56,7 @@ const ProductItem = ({
           <>
             {showAddToCartCta && (
               <button
-                className="bg-blue-600 text-white py-2 px-4 m-4 rounded hover:bg-blue-700 transition-colors cursor-pointer"
+                className="bg-blue-600 text-white py-2 px-4 m-4 rounded-lg hover:bg-blue-700 transition-colors cursor-pointer font-semibold shadow"
                 onClick={() => onAddToCart(product)}
                 type="button"
               >
