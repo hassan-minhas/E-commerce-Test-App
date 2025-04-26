@@ -6,6 +6,7 @@ import Loader from "@/components/Loader";
 import { Product } from "@/types";
 import { useParams } from "next/navigation";
 import { useFetch } from "@/hooks/useFetch";
+import { useCart } from "@/context/CartContext";
 
 export default function ProductPage() {
   const params = useParams();
@@ -17,10 +18,12 @@ export default function ProductPage() {
     `${process.env.NEXT_PUBLIC_API_BASE_URL}/products/${params.id}`
   );
 
+  const { cart, addToCart, removeFromCart } = useCart();
+
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [quantity, setQuantity] = useState(1);
-  const [selectedSize, setSelectedSize] = useState("");
-  const [selectedColor, setSelectedColor] = useState("");
+  const [selectedSize, setSelectedSize] = useState("S");
+  const [selectedColor, setSelectedColor] = useState("Black");
   const [isZoomed, setIsZoomed] = useState(false);
   const [expandedSection, setExpandedSection] = useState<string | null>(
     "description"
@@ -33,13 +36,27 @@ export default function ProductPage() {
   if (error) return <div>Error: {error.message}</div>;
   if (!product) return <div>Product not found</div>;
 
+  const addedToCart = cart.some(
+    (item) =>
+      item.id === product.id &&
+      item.size === selectedSize &&
+      item.color === selectedColor
+  );
+
   const handleAddToCart = () => {
-    console.log("Added to cart:", {
-      product,
-      quantity,
-      size: selectedSize,
-      color: selectedColor,
-    });
+    addToCart(
+      {
+        ...product,
+        size: selectedSize,
+        color: selectedColor,
+        quantity,
+      },
+      quantity
+    );
+  };
+
+  const handleRemoveFromCart = () => {
+    removeFromCart(product.id);
   };
 
   return (
@@ -67,7 +84,7 @@ export default function ProductPage() {
               <button
                 key={index}
                 onClick={() => setSelectedImageIndex(index)}
-                className={`relative w-20 h-20 flex-shrink-0 border-2 rounded-md overflow-hidden ${
+                className={`relative w-20 h-20 flex-shrink-0 border-2 rounded-md overflow-hidden cursor-pointer ${
                   selectedImageIndex === index
                     ? "border-blue-600"
                     : "border-gray-200"
@@ -94,71 +111,88 @@ export default function ProductPage() {
             </p>
           </div>
 
-          <div>
-            <h3 className="text-sm font-medium text-gray-900 mb-2">Size</h3>
-            <div className="flex gap-2">
-              {sizes.map((size) => (
-                <button
-                  key={size}
-                  onClick={() => setSelectedSize(size)}
-                  className={`px-4 py-2 border rounded-md ${
-                    selectedSize === size
-                      ? "border-blue-600 bg-blue-50 text-blue-600"
-                      : "border-gray-200 hover:border-gray-300"
-                  }`}
-                >
-                  {size}
-                </button>
-              ))}
-            </div>
-          </div>
+          {!addedToCart && (
+            <>
+              <div>
+                <h3 className="text-sm font-medium text-gray-900 mb-2">Size</h3>
+                <div className="flex gap-2">
+                  {sizes.map((size) => (
+                    <button
+                      key={size}
+                      onClick={() => setSelectedSize(size)}
+                      className={`px-4 py-2 border rounded-md cursor-pointer ${
+                        selectedSize === size
+                          ? "border-blue-600 bg-blue-50 text-blue-600"
+                          : "border-gray-200 hover:border-gray-300"
+                      }`}
+                    >
+                      {size}
+                    </button>
+                  ))}
+                </div>
+              </div>
 
-          <div>
-            <h3 className="text-sm font-medium text-gray-900 mb-2">Color</h3>
-            <div className="flex gap-2">
-              {colors.map((color) => (
-                <button
-                  key={color}
-                  onClick={() => setSelectedColor(color)}
-                  className={`px-4 py-2 border rounded-md ${
-                    selectedColor === color
-                      ? "border-blue-600 bg-blue-50 text-blue-600"
-                      : "border-gray-200 hover:border-gray-300"
-                  }`}
-                >
-                  {color}
-                </button>
-              ))}
-            </div>
-          </div>
+              <div>
+                <h3 className="text-sm font-medium text-gray-900 mb-2">
+                  Color
+                </h3>
+                <div className="flex gap-2">
+                  {colors.map((color) => (
+                    <button
+                      key={color}
+                      onClick={() => setSelectedColor(color)}
+                      className={`px-4 py-2 border rounded-md cursor-pointer ${
+                        selectedColor === color
+                          ? "border-blue-600 bg-blue-50 text-blue-600"
+                          : "border-gray-200 hover:border-gray-300"
+                      }`}
+                    >
+                      {color}
+                    </button>
+                  ))}
+                </div>
+              </div>
 
-          <div>
-            <h3 className="text-sm font-medium text-gray-900 mb-2">Quantity</h3>
-            <div className="flex items-center border border-gray-200 rounded-md w-fit">
-              <button
-                onClick={() => quantity > 1 && setQuantity(quantity - 1)}
-                className="px-4 py-2 text-gray-600 hover:bg-gray-50"
-              >
-                -
-              </button>
-              <span className="px-4 py-2 border-x border-gray-200">
-                {quantity}
-              </span>
-              <button
-                onClick={() => setQuantity(quantity + 1)}
-                className="px-4 py-2 text-gray-600 hover:bg-gray-50"
-              >
-                +
-              </button>
-            </div>
-          </div>
+              <div>
+                <h3 className="text-sm font-medium text-gray-900 mb-2">
+                  Quantity
+                </h3>
+                <div className="flex items-center border border-gray-200 rounded-md w-fit">
+                  <button
+                    onClick={() => quantity > 1 && setQuantity(quantity - 1)}
+                    className="px-4 py-2 text-gray-600 hover:bg-gray-50 cursor-pointer"
+                  >
+                    -
+                  </button>
+                  <span className="px-4 py-2 border-x border-gray-200">
+                    {quantity}
+                  </span>
+                  <button
+                    onClick={() => setQuantity(quantity + 1)}
+                    className="px-4 py-2 text-gray-600 hover:bg-gray-50 cursor-pointer"
+                  >
+                    +
+                  </button>
+                </div>
+              </div>
+            </>
+          )}
 
-          <button
-            onClick={handleAddToCart}
-            className="w-full bg-blue-600 text-white py-3 px-6 rounded-md hover:bg-blue-700 transition-colors"
-          >
-            Add to Cart
-          </button>
+          {addedToCart ? (
+            <button
+              onClick={handleRemoveFromCart}
+              className="w-full bg-red-600 text-white py-3 px-6 rounded-md hover:bg-red-700 transition-colors cursor-pointer"
+            >
+              Remove from Cart
+            </button>
+          ) : (
+            <button
+              onClick={handleAddToCart}
+              className="w-full bg-blue-600 text-white py-3 px-6 rounded-md hover:bg-blue-700 transition-colors cursor-pointer"
+            >
+              Add to Cart
+            </button>
+          )}
 
           <div className="border-t pt-6 mt-6">
             <div className="space-y-4">
@@ -170,7 +204,7 @@ export default function ProductPage() {
                         expandedSection === section ? null : section
                       )
                     }
-                    className="flex justify-between items-center w-full text-left"
+                    className="flex justify-between items-center w-full text-left cursor-pointer"
                   >
                     <span className="text-lg font-medium capitalize">
                       {section}
@@ -187,7 +221,9 @@ export default function ProductPage() {
                     <div className="mt-4 text-gray-600">
                       {section === "description"
                         ? product.description
-                        : `This is the ${section} information`}
+                        : section === "shipping"
+                        ? "Shipping is free."
+                        : `You can return this product within 14 days`}
                     </div>
                   )}
                 </div>
