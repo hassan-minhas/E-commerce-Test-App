@@ -60,11 +60,11 @@ export default function ProductPage() {
   };
 
   return (
-    <div className="py-8">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+    <div className="py-10 px-2 md:px-0">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-10 max-w-5xl mx-auto bg-white/90 rounded-2xl shadow-xl p-6 md:p-10">
         <div className="relative space-y-4">
           <div
-            className="relative aspect-square w-full bg-gray-100 rounded-lg overflow-hidden cursor-zoom-in"
+            className="relative aspect-square w-full bg-gray-100 rounded-xl overflow-hidden cursor-zoom-in border-2 border-gray-200 hover:border-blue-200 transition"
             onMouseEnter={() => setIsZoomed(true)}
             onMouseLeave={() => setIsZoomed(false)}
           >
@@ -84,11 +84,12 @@ export default function ProductPage() {
               <button
                 key={index}
                 onClick={() => setSelectedImageIndex(index)}
-                className={`relative w-20 h-20 flex-shrink-0 border-2 rounded-md overflow-hidden cursor-pointer ${
+                className={`relative w-20 h-20 flex-shrink-0 border-2 rounded-lg overflow-hidden cursor-pointer transition-all duration-150 ${
                   selectedImageIndex === index
-                    ? "border-blue-600"
-                    : "border-gray-200"
+                    ? "border-blue-600 ring-2 ring-blue-200"
+                    : "border-gray-200 hover:border-blue-300"
                 }`}
+                aria-label={`Show image ${index + 1}`}
               >
                 <Image
                   src={img}
@@ -101,12 +102,12 @@ export default function ProductPage() {
           </div>
         </div>
 
-        <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-8">
           <div>
-            <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
+            <h1 className="text-3xl font-extrabold text-gray-900 mb-2">
               {product.title}
             </h1>
-            <p className="mt-2 text-2xl font-bold text-gray-900">
+            <p className="mt-1 text-2xl font-bold text-blue-700">
               ${product?.price.toFixed(2)}
             </p>
           </div>
@@ -114,16 +115,16 @@ export default function ProductPage() {
           {!addedToCart && (
             <>
               <div>
-                <h3 className="text-sm font-medium text-gray-900 mb-2">Size</h3>
+                <h3 className="text-sm font-semibold text-gray-900 mb-2">Size</h3>
                 <div className="flex gap-2">
                   {sizes.map((size) => (
                     <button
                       key={size}
                       onClick={() => setSelectedSize(size)}
-                      className={`px-4 py-2 border rounded-md cursor-pointer ${
+                      className={`px-4 py-2 border rounded-lg cursor-pointer font-medium transition ${
                         selectedSize === size
-                          ? "border-blue-600 bg-blue-50 text-blue-600"
-                          : "border-gray-200 hover:border-gray-300"
+                          ? "border-blue-600 bg-blue-50 text-blue-600 shadow"
+                          : "border-gray-200 hover:border-blue-300"
                       }`}
                     >
                       {size}
@@ -133,7 +134,7 @@ export default function ProductPage() {
               </div>
 
               <div>
-                <h3 className="text-sm font-medium text-gray-900 mb-2">
+                <h3 className="text-sm font-semibold text-gray-900 mb-2">
                   Color
                 </h3>
                 <div className="flex gap-2">
@@ -141,10 +142,10 @@ export default function ProductPage() {
                     <button
                       key={color}
                       onClick={() => setSelectedColor(color)}
-                      className={`px-4 py-2 border rounded-md cursor-pointer ${
+                      className={`px-4 py-2 border rounded-lg cursor-pointer font-medium transition ${
                         selectedColor === color
-                          ? "border-blue-600 bg-blue-50 text-blue-600"
-                          : "border-gray-200 hover:border-gray-300"
+                          ? "border-blue-600 bg-blue-50 text-blue-600 shadow"
+                          : "border-gray-200 hover:border-blue-300"
                       }`}
                     >
                       {color}
@@ -154,22 +155,22 @@ export default function ProductPage() {
               </div>
 
               <div>
-                <h3 className="text-sm font-medium text-gray-900 mb-2">
+                <h3 className="text-sm font-semibold text-gray-900 mb-2">
                   Quantity
                 </h3>
-                <div className="flex items-center border border-gray-200 rounded-md w-fit">
+                <div className="flex items-center border border-gray-200 rounded-lg w-fit bg-gray-50">
                   <button
                     onClick={() => quantity > 1 && setQuantity(quantity - 1)}
-                    className="px-4 py-2 text-gray-600 hover:bg-gray-50 cursor-pointer"
+                    className="px-4 py-2 text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded-l-lg transition"
                   >
                     -
                   </button>
-                  <span className="px-4 py-2 border-x border-gray-200">
+                  <span className="px-4 py-2 border-x border-gray-200 bg-white font-semibold">
                     {quantity}
                   </span>
                   <button
                     onClick={() => setQuantity(quantity + 1)}
-                    className="px-4 py-2 text-gray-600 hover:bg-gray-50 cursor-pointer"
+                    className="px-4 py-2 text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded-r-lg transition"
                   >
                     +
                   </button>
@@ -181,14 +182,14 @@ export default function ProductPage() {
           {addedToCart ? (
             <button
               onClick={handleRemoveFromCart}
-              className="w-full bg-red-600 text-white py-3 px-6 rounded-md hover:bg-red-700 transition-colors cursor-pointer"
+              className="w-full bg-red-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-red-700 transition-colors shadow"
             >
               Remove from Cart
             </button>
           ) : (
             <button
               onClick={handleAddToCart}
-              className="w-full bg-blue-600 text-white py-3 px-6 rounded-md hover:bg-blue-700 transition-colors cursor-pointer"
+              className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition-colors shadow"
             >
               Add to Cart
             </button>
@@ -204,14 +205,14 @@ export default function ProductPage() {
                         expandedSection === section ? null : section
                       )
                     }
-                    className="flex justify-between items-center w-full text-left cursor-pointer"
+                    className="flex justify-between items-center w-full text-left cursor-pointer group"
                   >
-                    <span className="text-lg font-medium capitalize">
+                    <span className="text-lg font-semibold capitalize">
                       {section}
                     </span>
                     <span
-                      className={`transform transition-transform ${
-                        expandedSection === section ? "rotate-180" : ""
+                      className={`ml-2 transform transition-transform group-hover:text-blue-600 ${
+                        expandedSection === section ? "rotate-180 text-blue-600" : "text-gray-400"
                       }`}
                     >
                       ▼

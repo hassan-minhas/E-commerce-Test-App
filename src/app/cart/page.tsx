@@ -103,9 +103,9 @@ export default function CartPage() {
                 {cart.map((item) => (
                   <li
                     key={`${item.id}-${item.size}-${item.color}`}
-                    className="flex items-center bg-white rounded-lg shadow p-4"
+                    className="flex flex-col sm:flex-row items-center bg-white rounded-2xl shadow-lg p-4 gap-6 sm:gap-4 border border-gray-100"
                   >
-                    <div className="w-24 h-24 relative mr-6 flex-shrink-0 rounded overflow-hidden border border-gray-100 bg-gray-50">
+                    <div className="w-full sm:w-28 h-44 sm:h-28 relative flex-shrink-0 rounded-xl overflow-hidden border border-gray-200 bg-gray-50">
                       <Image
                         src={item.images?.[0] || "/placeholder.png"}
                         alt={item.title}
@@ -113,44 +113,44 @@ export default function CartPage() {
                         className="object-contain"
                       />
                     </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="font-semibold text-lg text-gray-900 truncate">
+                    <div className="flex-1 min-w-0 w-full sm:w-auto mt-4 sm:mt-0 flex flex-col gap-2">
+                      <div className="font-bold text-lg text-gray-900 truncate">
                         {item.title}
                       </div>
-                      <div className="flex gap-4 mt-1 text-sm text-gray-500">
+                      <div className="flex flex-wrap gap-4 text-sm text-gray-500">
                         <span>
                           Size:{" "}
-                          <span className="font-medium text-gray-700">
+                          <span className="font-semibold text-gray-700">
                             {item.size}
                           </span>
                         </span>
                         <span>
                           Color:{" "}
-                          <span className="font-medium text-gray-700">
+                          <span className="font-semibold text-gray-700">
                             {item.color}
                           </span>
                         </span>
                       </div>
-                      <div className="mt-2 flex items-center gap-4">
+                      <div className="mt-1 flex flex-wrap items-center gap-4">
                         <span className="text-gray-500 text-sm">
                           Quantity:{" "}
-                          <span className="font-medium text-gray-700">
+                          <span className="font-semibold text-gray-700">
                             {item.quantity}
                           </span>
                         </span>
-                        <span className="text-xl font-bold text-blue-700">
+                        <span className="text-xl font-extrabold text-blue-700">
                           ${(item.price * item.quantity).toFixed(2)}
                         </span>
                       </div>
                       <Link
                         href={`/products/${item.id}`}
-                        className="inline-block mt-3 px-4 py-2 bg-blue-100 text-blue-700 rounded hover:bg-blue-200 transition font-semibold text-sm"
+                        className="inline-block mt-2 px-4 py-2 bg-blue-50 text-blue-700 rounded-lg hover:bg-blue-100 transition font-semibold text-sm shadow-sm sm:max-w-32"
                       >
                         View Product
                       </Link>
                     </div>
                     <button
-                      className="ml-6 px-4 py-2 bg-red-100 text-red-700 rounded hover:bg-red-200 transition font-semibold cursor-pointer"
+                      className="mt-4 sm:mt-0 sm:ml-6 px-5 py-2 bg-red-50 text-red-700 rounded-lg hover:bg-red-100 transition font-bold cursor-pointer w-full sm:w-auto shadow-sm"
                       onClick={() => removeFromCart(item.id)}
                     >
                       Remove
@@ -181,9 +181,9 @@ export default function CartPage() {
             </>
           )}
           {showCheckoutModal && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-2">
               <form
-                className="bg-white p-8 rounded-xl shadow-2xl max-w-md w-full animate-fade-in"
+                className="bg-white p-4 sm:p-8 rounded-xl sm:rounded-2xl shadow-2xl w-full max-w-md animate-fade-in overflow-y-auto max-h-[95vh]"
                 onSubmit={handleSubmit}
                 noValidate
               >

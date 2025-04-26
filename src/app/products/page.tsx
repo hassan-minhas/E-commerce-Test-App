@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Loader from "@/components/Loader";
 import ProductItem from "@/components/ProductItem";
 import { CartItem, Product } from "@/types";
@@ -30,21 +30,21 @@ function ProductAddToCartModal({
   const colors = ["Black", "White", "Blue", "Red"];
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 bg-opacity-10">
-      <div className="bg-white p-6 rounded-lg w-full max-w-md shadow-lg">
-        <h2 className="text-xl font-bold mb-4">Add to Cart</h2>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 bg-opacity-10 px-2">
+      <div className="bg-white p-4 sm:p-8 rounded-lg w-full max-w-sm sm:max-w-md shadow-lg">
+        <h2 className="text-xl font-bold mb-4 text-center">Add to Cart</h2>
         <div className="mb-4">
-          <div className="font-semibold">{product.title}</div>
-          <div className="text-gray-500">${product.price.toFixed(2)}</div>
+          <div className="font-semibold text-center">{product.title}</div>
+          <div className="text-gray-500 text-center">${product.price.toFixed(2)}</div>
         </div>
         <div className="mb-4">
           <label className="block mb-1 font-medium">Size</label>
-          <div className="flex gap-2">
+          <div className="flex flex-wrap gap-2">
             {sizes.map((s) => (
               <button
                 key={s}
                 onClick={() => setSize(s)}
-                className={`px-3 cursor-pointer py-1 rounded border ${
+                className={`px-3 py-1 rounded border w-1/4 sm:w-auto ${
                   size === s
                     ? "bg-blue-600 text-white border-blue-600"
                     : "border-gray-300"
@@ -57,12 +57,12 @@ function ProductAddToCartModal({
         </div>
         <div className="mb-4">
           <label className="block mb-1 font-medium">Color</label>
-          <div className="flex gap-2">
+          <div className="flex flex-wrap gap-2">
             {colors.map((c) => (
               <button
                 key={c}
                 onClick={() => setColor(c)}
-                className={`px-3 cursor-pointer py-1 rounded border ${
+                className={`px-3 py-1 rounded border w-1/4 sm:w-auto ${
                   color === c
                     ? "bg-blue-600 text-white border-blue-600"
                     : "border-gray-300"
@@ -75,24 +75,24 @@ function ProductAddToCartModal({
         </div>
         <div className="mb-4">
           <label className="block mb-1 font-medium">Quantity</label>
-          <div className="flex items-center border border-gray-200 rounded-md w-fit">
+          <div className="flex items-center border border-gray-200 rounded-md w-full max-w-xs mx-auto">
             <button
               onClick={() => quantity > 1 && setQuantity(quantity - 1)}
-              className="cursor-pointer px-3 py-1"
+              className="cursor-pointer px-3 py-1 w-1/3"
             >
               -
             </button>
-            <span className="px-4">{quantity}</span>
+            <span className="px-4 w-1/3 text-center">{quantity}</span>
             <button
               onClick={() => setQuantity(quantity + 1)}
-              className="cursor-pointer px-3 py-1"
+              className="cursor-pointer px-3 py-1 w-1/3"
             >
               +
             </button>
           </div>
         </div>
-        <div className="flex justify-end gap-2">
-          <button onClick={onClose} className="px-4 py-2 rounded bg-gray-200">
+        <div className="flex flex-col sm:flex-row justify-end gap-2 mt-4">
+          <button onClick={onClose} className="px-4 py-2 rounded bg-gray-200 w-full sm:w-auto">
             Cancel
           </button>
           <button
@@ -101,7 +101,7 @@ function ProductAddToCartModal({
               onConfirm({ ...product, size, color, quantity });
               onClose();
             }}
-            className="cursor-pointer px-4 py-2 rounded bg-blue-600 text-white"
+            className="cursor-pointer px-4 py-2 rounded bg-blue-600 text-white w-full sm:w-auto"
             disabled={!size || !color}
           >
             Add to Cart
@@ -114,7 +114,7 @@ function ProductAddToCartModal({
 
 export default function ProductsPage() {
   const productsPerPage = 8;
-  const firstLoading = useRef(null);
+  const firstLoading = useRef(false);
   const [products, setProducts] = useState<Product[]>([]);
   const [offset, setOffset] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -148,7 +148,7 @@ export default function ProductsPage() {
     }
   };
 
-  useState(() => {
+  useEffect(() => {
     if (products.length === 0 && !firstLoading.current) {
       firstLoading.current = true;
       loadMore();
