@@ -1,10 +1,10 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
 import { useEffect, useRef, useState } from "react";
 import Loader from "@/components/Loader";
 import ProductItem from "@/components/ProductItem";
 import { CartItem, Product } from "@/types";
-import { Waypoint } from "react-waypoint";
 import { useCart } from "@/context/CartContext";
 
 interface ProductAddToCartModalProps {
@@ -196,6 +196,25 @@ export default function ProductsPage() {
     removeFromCart(product.id);
   };
 
+  const loadMoreRef = useRef<HTMLDivElement | null>(null);
+
+  // IntersectionObserver for infinite scroll
+  useEffect(() => {
+    if (allLoaded || loading) return;
+    const observer = new window.IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          loadMore();
+        }
+      },
+      { threshold: 0.1 }
+    );
+    if (loadMoreRef.current) observer.observe(loadMoreRef.current);
+    return () => {
+      if (loadMoreRef.current) observer.unobserve(loadMoreRef.current);
+    };
+  }, [allLoaded, loading, loadMore]);
+
   return (
     <div className="py-8" role="main">
       <ProductAddToCartModal
@@ -217,21 +236,19 @@ export default function ProductsPage() {
           <ProductItem
             key={product.id}
             product={product}
+            showAddToCartCta={true}
             onAddToCart={handleAddToCartClick}
             onRemoveFromCart={handleRemoveFromCart}
-            isAddedToCart={Boolean(cart.find((item) => item.id === product.id))}
+            isAddedToCart={!!cart.find((item) => item.id === product.id)}
           />
         ))}
       </div>
+      {!allLoaded && (
+        <div ref={loadMoreRef} className="flex justify-center py-8">
+          {loading ? <Loader /> : <span>Scroll to load more...</span>}
+        </div>
+      )}
       <div className="mt-8 flex flex-col gap-8 justify-center">
-        {loading && (
-          <div aria-live="polite">
-            <Loader />
-          </div>
-        )}
-        {!allLoaded && !loading && products.length > 0 && (
-          <Waypoint onEnter={loadMore} />
-        )}
         {allLoaded && (
           <span className="text-gray-500 mx-auto mt-12">
             No more products to load.
