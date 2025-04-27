@@ -30,13 +30,18 @@ class ErrorBoundary extends React.Component<
   render() {
     if (this.state.hasError) {
       return (
-        <div className="flex flex-col items-center justify-center min-h-[40vh] bg-red-50 rounded-lg shadow-md p-8">
+        <div
+          className="flex flex-col items-center justify-center min-h-[40vh] bg-red-50 rounded-lg shadow-md p-8"
+          role="alert"
+          aria-describedby="error-message"
+        >
           <div className="flex items-center mb-4">
             <svg
               className="w-8 h-8 text-red-500 mr-2"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
+              aria-hidden="true"
             >
               <path
                 strokeLinecap="round"
@@ -49,7 +54,7 @@ class ErrorBoundary extends React.Component<
               Something went wrong.
             </h2>
           </div>
-          <p className="mb-6 text-gray-700 text-center">
+          <p id="error-message" className="mb-6 text-gray-700 text-center">
             {this.state.error?.message}
           </p>
           <div className="flex gap-4">
@@ -57,6 +62,7 @@ class ErrorBoundary extends React.Component<
               onClick={this.handleRetry}
               className="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition cursor-pointer"
               style={{ cursor: "pointer" }}
+              aria-label="Retry loading the page"
             >
               Retry
             </button>

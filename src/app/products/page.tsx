@@ -30,10 +30,17 @@ function ProductAddToCartModal({
   const colors = ["Black", "White", "Blue", "Red"];
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 bg-opacity-10 px-2">
-      <div className="bg-white p-4 sm:p-8 rounded-lg w-full max-w-sm sm:max-w-md shadow-lg">
-        <h2 className="text-xl font-bold mb-4 text-center">Add to Cart</h2>
-        <div className="mb-4">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 bg-opacity-10 px-2"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="add-to-cart-title"
+      aria-describedby="add-to-cart-desc"
+      tabIndex={-1}
+    >
+      <div className="bg-white p-4 sm:p-8 rounded-lg w-full max-w-sm sm:max-w-md shadow-lg" role="document">
+        <h2 id="add-to-cart-title" className="text-xl font-bold mb-4 text-center">Add to Cart</h2>
+        <div id="add-to-cart-desc" className="mb-4">
           <div className="font-semibold text-center">{product.title}</div>
           <div className="text-gray-500 text-center">${product.price.toFixed(2)}</div>
         </div>
@@ -49,6 +56,8 @@ function ProductAddToCartModal({
                     ? "bg-blue-600 text-white border-blue-600"
                     : "border-gray-300"
                 }`}
+                aria-pressed={size === s}
+                aria-label={`Select size ${s}`}
               >
                 {s}
               </button>
@@ -67,6 +76,8 @@ function ProductAddToCartModal({
                     ? "bg-blue-600 text-white border-blue-600"
                     : "border-gray-300"
                 }`}
+                aria-pressed={color === c}
+                aria-label={`Select color ${c}`}
               >
                 {c}
               </button>
@@ -79,6 +90,7 @@ function ProductAddToCartModal({
             <button
               onClick={() => quantity > 1 && setQuantity(quantity - 1)}
               className="cursor-pointer px-3 py-1 w-1/3"
+              aria-label="Decrease quantity"
             >
               -
             </button>
@@ -86,13 +98,14 @@ function ProductAddToCartModal({
             <button
               onClick={() => setQuantity(quantity + 1)}
               className="cursor-pointer px-3 py-1 w-1/3"
+              aria-label="Increase quantity"
             >
               +
             </button>
           </div>
         </div>
         <div className="flex flex-col sm:flex-row justify-end gap-2 mt-4">
-          <button onClick={onClose} className="px-4 py-2 rounded bg-gray-200 w-full sm:w-auto">
+          <button onClick={onClose} className="px-4 py-2 rounded bg-gray-200 w-full sm:w-auto" aria-label="Cancel add to cart">
             Cancel
           </button>
           <button
@@ -103,6 +116,7 @@ function ProductAddToCartModal({
             }}
             className="cursor-pointer px-4 py-2 rounded bg-blue-600 text-white w-full sm:w-auto"
             disabled={!size || !color}
+            aria-label="Confirm add to cart"
           >
             Add to Cart
           </button>
@@ -169,7 +183,7 @@ export default function ProductsPage() {
   };
 
   return (
-    <div className="py-8">
+    <div className="py-8" role="main">
       <ProductAddToCartModal
         open={modalOpen}
         product={modalProduct}
@@ -179,7 +193,7 @@ export default function ProductsPage() {
       <h1 className="text-3xl font-bold text-gray-900 mb-8 text-center md:text-left">
         All Products
       </h1>
-      {error && <div className="text-red-600 mb-4">Error: {error.message}</div>}
+      {error && <div className="text-red-600 mb-4" aria-live="polite">Error: {error.message}</div>}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {products.map((product) => (
           <ProductItem
@@ -192,7 +206,7 @@ export default function ProductsPage() {
         ))}
       </div>
       <div className="mt-8 flex flex-col gap-8 justify-center">
-        {loading && <Loader />}
+        {loading && <div aria-live="polite"><Loader /></div>}
         {!allLoaded && !loading && products.length > 0 && (
           <Waypoint onEnter={loadMore} />
         )}

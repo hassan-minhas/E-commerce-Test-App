@@ -17,7 +17,7 @@ export default function HomePage() {
   );
 
   return (
-    <div className="flex flex-col gap-12">
+    <div className="flex flex-col gap-12" role="main">
       <section className="flex flex-col-reverse md:flex-row items-center justify-between gap-8 py-12 md:py-20 bg-gradient-to-r from-blue-50 via-white to-orange-50 rounded-xl shadow-md">
         <div className="flex-1 text-center md:text-left px-4">
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold text-gray-900 mb-6 leading-tight">
@@ -36,6 +36,7 @@ export default function HomePage() {
           <Link
             href="/products"
             className="inline-block bg-blue-600 text-white px-8 py-4 rounded-lg font-bold text-lg shadow-lg hover:bg-blue-700 transition"
+            aria-label="Shop all products now"
           >
             Shop Now
           </Link>
@@ -48,6 +49,7 @@ export default function HomePage() {
             height={340}
             className="w-full max-w-xs md:max-w-md h-auto rounded-lg shadow-lg"
             priority
+            aria-label="Store welcome banner"
           />
         </div>
       </section>
@@ -59,14 +61,19 @@ export default function HomePage() {
           <Link
             href="/products"
             className="text-blue-600 hover:underline font-medium text-sm"
+            aria-label="Show all products"
           >
             Show All
           </Link>
         </div>
         {error ? (
-          <div className="text-red-600">Error: {error.message}</div>
+          <div className="text-red-600" aria-live="polite">
+            Error: {error.message}
+          </div>
         ) : loading ? (
-          <Loader />
+          <div aria-live="polite">
+            <Loader />
+          </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {products?.map((product) => (

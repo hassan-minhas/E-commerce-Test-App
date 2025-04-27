@@ -41,11 +41,13 @@ const LazyImage: React.FC<LazyImageProps> = ({
       className={`relative overflow-hidden ${className}`}
       style={{ ...style, width: "100%", height: "100%" }}
       ref={imgRef as React.Ref<HTMLDivElement> | undefined}
+      role="img"
+      aria-label={alt}
     >
       {!isLoaded && (
         <img
           src={placeholderSrc || src}
-          alt={alt}
+          alt=""
           className="absolute inset-0 w-full h-full object-cover blur-md scale-105 transition-all duration-500"
           style={{
             filter: "blur(16px)",
