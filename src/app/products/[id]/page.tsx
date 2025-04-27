@@ -32,7 +32,12 @@ export default function ProductPage() {
   const sizes = ["S", "M", "L", "XL"];
   const colors = ["Black", "White", "Blue", "Red"];
 
-  if (loading) return <div aria-live="polite"><Loader /></div>;
+  if (loading)
+    return (
+      <div aria-live="polite">
+        <Loader />
+      </div>
+    );
   if (error) return <div aria-live="polite">Error: {error.message}</div>;
   if (!product) return <div aria-live="polite">Product not found</div>;
 
@@ -178,7 +183,7 @@ export default function ProductPage() {
                 <div className="flex items-center border border-gray-200 rounded-lg w-fit bg-gray-50">
                   <button
                     onClick={() => quantity > 1 && setQuantity(quantity - 1)}
-                    className="px-4 py-2 text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded-l-lg transition"
+                    className="px-4 py-2 text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded-l-lg transition cursor-pointer"
                     aria-label="Decrease quantity"
                   >
                     -
@@ -188,7 +193,7 @@ export default function ProductPage() {
                   </span>
                   <button
                     onClick={() => setQuantity(quantity + 1)}
-                    className="px-4 py-2 text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded-r-lg transition"
+                    className="px-4 py-2 text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded-r-lg transition cursor-pointer"
                     aria-label="Increase quantity"
                   >
                     +
@@ -201,7 +206,7 @@ export default function ProductPage() {
           {addedToCart ? (
             <button
               onClick={handleRemoveFromCart}
-              className="w-full bg-red-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-red-700 transition-colors shadow"
+              className="w-full bg-red-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-red-700 transition-colors shadow cursor-pointer"
               aria-label="Remove from Cart"
             >
               Remove from Cart
@@ -209,7 +214,7 @@ export default function ProductPage() {
           ) : (
             <button
               onClick={handleAddToCart}
-              className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition-colors shadow"
+              className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition-colors shadow cursor-pointer"
               aria-label="Add to Cart"
             >
               Add to Cart
@@ -245,7 +250,10 @@ export default function ProductPage() {
                     </span>
                   </button>
                   {expandedSection === section && (
-                    <div className="mt-4 text-gray-600" id={`section-content-${section}`}>
+                    <div
+                      className="mt-4 text-gray-600"
+                      id={`section-content-${section}`}
+                    >
                       {section === "description"
                         ? product.description
                         : section === "shipping"
