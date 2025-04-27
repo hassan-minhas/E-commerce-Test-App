@@ -22,6 +22,7 @@ export default function ProductPage() {
 
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [quantity, setQuantity] = useState(1);
+  const [quantityError, setQuantityError] = useState<string | null>(null);
   const [selectedSize, setSelectedSize] = useState("S");
   const [selectedColor, setSelectedColor] = useState("Black");
   const [isZoomed, setIsZoomed] = useState(false);
@@ -182,23 +183,60 @@ export default function ProductPage() {
                 </h3>
                 <div className="flex items-center border border-gray-200 rounded-lg w-fit bg-gray-50">
                   <button
-                    onClick={() => quantity > 1 && setQuantity(quantity - 1)}
+                    onClick={() => {
+                      if (quantity > 1) {
+                        setQuantity(quantity - 1);
+                        setQuantityError(null);
+                      }
+                    }}
                     className="px-4 py-2 text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded-l-lg transition cursor-pointer"
                     aria-label="Decrease quantity"
+                    disabled={quantity <= 1}
                   >
                     -
                   </button>
-                  <span className="px-4 py-2 border-x border-gray-200 bg-white font-semibold">
-                    {quantity}
-                  </span>
+                  <input
+                    type="number"
+                    min={1}
+                    max={20}
+                    value={quantity}
+                    onChange={e => {
+                      const val = Number(e.target.value);
+                      if (val > 20) {
+                        setQuantity(20);
+                        setQuantityError("Maximum quantity is 20");
+                      } else if (val < 1) {
+                        setQuantity(1);
+                        setQuantityError("Minimum quantity is 1");
+                      } else {
+                        setQuantity(val);
+                        setQuantityError(null);
+                      }
+                    }}
+                    className="w-16 text-center px-2 py-2 border-x border-gray-200 bg-white font-semibold outline-none"
+                    aria-label="Set quantity"
+                  />
                   <button
-                    onClick={() => setQuantity(quantity + 1)}
+                    onClick={() => {
+                      if (quantity < 20) {
+                        setQuantity(quantity + 1);
+                        setQuantityError(null);
+                      } else {
+                        setQuantityError("Maximum quantity is 20");
+                      }
+                    }}
                     className="px-4 py-2 text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded-r-lg transition cursor-pointer"
                     aria-label="Increase quantity"
+                    disabled={quantity >= 20}
                   >
                     +
                   </button>
                 </div>
+                {quantityError && (
+                  <div className="text-red-600 text-sm mt-1" role="alert">
+                    {quantityError}
+                  </div>
+                )}
               </div>
             </>
           )}

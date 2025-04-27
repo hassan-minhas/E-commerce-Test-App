@@ -23,6 +23,7 @@ function ProductAddToCartModal({
   const [size, setSize] = useState("S");
   const [color, setColor] = useState("Black");
   const [quantity, setQuantity] = useState(1);
+  const [quantityError, setQuantityError] = useState<string | null>(null);
 
   if (!open || !product) return null;
 
@@ -98,21 +99,60 @@ function ProductAddToCartModal({
           <label className="block mb-1 font-medium">Quantity</label>
           <div className="flex items-center border border-gray-200 rounded-md w-full max-w-xs mx-auto">
             <button
-              onClick={() => quantity > 1 && setQuantity(quantity - 1)}
+              onClick={() => {
+                if (quantity > 1) {
+                  setQuantity(quantity - 1);
+                  setQuantityError(null);
+                }
+              }}
               className="cursor-pointer px-3 py-1 w-1/3"
               aria-label="Decrease quantity"
+              disabled={quantity <= 1}
             >
               -
             </button>
-            <span className="px-4 w-1/3 text-center">{quantity}</span>
+            <input
+              type="number"
+              min={1}
+              max={20}
+              value={quantity}
+              onChange={e => {
+                const val = Number(e.target.value);
+                if (val > 20) {
+                  setQuantity(20);
+                  setQuantityError("Maximum quantity is 20");
+                } else if (val < 1) {
+                  setQuantity(1);
+                  setQuantityError("Minimum quantity is 1");
+                } else {
+                  setQuantity(val);
+                  setQuantityError(null);
+                }
+              }}
+              className="w-16 text-center px-2 py-2 border-x border-gray-200 bg-white font-semibold outline-none"
+              aria-label="Set quantity"
+            />
             <button
-              onClick={() => setQuantity(quantity + 1)}
+              onClick={() => {
+                if (quantity < 20) {
+                  setQuantity(quantity + 1);
+                  setQuantityError(null);
+                } else {
+                  setQuantityError("Maximum quantity is 20");
+                }
+              }}
               className="cursor-pointer px-3 py-1 w-1/3"
               aria-label="Increase quantity"
+              disabled={quantity >= 20}
             >
               +
             </button>
           </div>
+          {quantityError && (
+            <div className="text-red-600 text-sm mt-1" role="alert">
+              {quantityError}
+            </div>
+          )}
         </div>
         <div className="flex flex-col sm:flex-row justify-end gap-2 mt-4">
           <button
