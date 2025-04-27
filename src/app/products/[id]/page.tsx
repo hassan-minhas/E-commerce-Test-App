@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
+import LazyImage from "@/components/LazyImage";
 import Loader from "@/components/Loader";
 import { Product } from "@/types";
 import { useParams } from "next/navigation";
@@ -32,9 +32,9 @@ export default function ProductPage() {
   const sizes = ["S", "M", "L", "XL"];
   const colors = ["Black", "White", "Blue", "Red"];
 
-  if (loading) return <Loader />;
-  if (error) return <div>Error: {error.message}</div>;
-  if (!product) return <div>Product not found</div>;
+  if (loading) return <div aria-live="polite"><Loader /></div>;
+  if (error) return <div aria-live="polite">Error: {error.message}</div>;
+  if (!product) return <div aria-live="polite">Product not found</div>;
 
   const addedToCart = cart.some(
     (item) =>
@@ -60,22 +60,27 @@ export default function ProductPage() {
   };
 
   return (
-    <div className="py-10 px-2 md:px-0">
+    <div className="py-10 px-2 md:px-0" role="main">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-10 max-w-5xl mx-auto bg-white/90 rounded-2xl shadow-xl p-6 md:p-10">
         <div className="relative space-y-4">
           <div
             className="relative aspect-square w-full bg-gray-100 rounded-xl overflow-hidden cursor-zoom-in border-2 border-gray-200 hover:border-blue-200 transition"
             onMouseEnter={() => setIsZoomed(true)}
             onMouseLeave={() => setIsZoomed(false)}
+            aria-label="Product image zoom area"
           >
-            <Image
+            <LazyImage
               src={product?.images[selectedImageIndex] || ""}
               alt={product.title}
-              fill
               className={`object-contain transition-transform duration-300 ${
                 isZoomed ? "scale-150" : "scale-100"
               }`}
-              sizes="(max-width: 768px) 100vw, 50vw"
+              style={{
+                width: "100%",
+                height: "100%",
+                position: "absolute",
+                inset: 0,
+              }}
             />
           </div>
 
@@ -90,12 +95,18 @@ export default function ProductPage() {
                     : "border-gray-200 hover:border-blue-300"
                 }`}
                 aria-label={`Show image ${index + 1}`}
+                aria-pressed={selectedImageIndex === index}
               >
-                <Image
+                <LazyImage
                   src={img}
                   alt={`${product.title} thumbnail ${index + 1}`}
-                  fill
                   className="object-cover"
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    position: "absolute",
+                    inset: 0,
+                  }}
                 />
               </button>
             ))}
@@ -115,7 +126,9 @@ export default function ProductPage() {
           {!addedToCart && (
             <>
               <div>
-                <h3 className="text-sm font-semibold text-gray-900 mb-2">Size</h3>
+                <h3 className="text-sm font-semibold text-gray-900 mb-2">
+                  Size
+                </h3>
                 <div className="flex gap-2">
                   {sizes.map((size) => (
                     <button
@@ -126,6 +139,8 @@ export default function ProductPage() {
                           ? "border-blue-600 bg-blue-50 text-blue-600 shadow"
                           : "border-gray-200 hover:border-blue-300"
                       }`}
+                      aria-pressed={selectedSize === size}
+                      aria-label={`Select size ${size}`}
                     >
                       {size}
                     </button>
@@ -147,6 +162,8 @@ export default function ProductPage() {
                           ? "border-blue-600 bg-blue-50 text-blue-600 shadow"
                           : "border-gray-200 hover:border-blue-300"
                       }`}
+                      aria-pressed={selectedColor === color}
+                      aria-label={`Select color ${color}`}
                     >
                       {color}
                     </button>
@@ -162,6 +179,7 @@ export default function ProductPage() {
                   <button
                     onClick={() => quantity > 1 && setQuantity(quantity - 1)}
                     className="px-4 py-2 text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded-l-lg transition"
+                    aria-label="Decrease quantity"
                   >
                     -
                   </button>
@@ -171,6 +189,7 @@ export default function ProductPage() {
                   <button
                     onClick={() => setQuantity(quantity + 1)}
                     className="px-4 py-2 text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded-r-lg transition"
+                    aria-label="Increase quantity"
                   >
                     +
                   </button>
@@ -183,6 +202,7 @@ export default function ProductPage() {
             <button
               onClick={handleRemoveFromCart}
               className="w-full bg-red-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-red-700 transition-colors shadow"
+              aria-label="Remove from Cart"
             >
               Remove from Cart
             </button>
@@ -190,6 +210,7 @@ export default function ProductPage() {
             <button
               onClick={handleAddToCart}
               className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition-colors shadow"
+              aria-label="Add to Cart"
             >
               Add to Cart
             </button>
@@ -206,20 +227,25 @@ export default function ProductPage() {
                       )
                     }
                     className="flex justify-between items-center w-full text-left cursor-pointer group"
+                    aria-expanded={expandedSection === section}
+                    aria-controls={`section-content-${section}`}
+                    aria-label={`Toggle ${section} section`}
                   >
                     <span className="text-lg font-semibold capitalize">
                       {section}
                     </span>
                     <span
                       className={`ml-2 transform transition-transform group-hover:text-blue-600 ${
-                        expandedSection === section ? "rotate-180 text-blue-600" : "text-gray-400"
+                        expandedSection === section
+                          ? "rotate-180 text-blue-600"
+                          : "text-gray-400"
                       }`}
                     >
                       ▼
                     </span>
                   </button>
                   {expandedSection === section && (
-                    <div className="mt-4 text-gray-600">
+                    <div className="mt-4 text-gray-600" id={`section-content-${section}`}>
                       {section === "description"
                         ? product.description
                         : section === "shipping"

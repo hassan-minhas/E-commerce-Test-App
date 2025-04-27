@@ -68,29 +68,31 @@ export default function CartPage() {
   };
 
   return (
-    <div className="py-8 max-w-3xl mx-auto">
+    <div className="py-8 max-w-3xl mx-auto" role="main">
       <h1 className="text-4xl font-extrabold text-gray-900 mb-10 text-center tracking-tight">
         Your Cart
       </h1>
       {checkoutSuccess && (
-        <div className="mb-8 p-4 bg-green-100 text-green-800 rounded text-center font-semibold flex flex-col items-center">
+        <div className="mb-8 p-4 bg-green-100 text-green-800 rounded text-center font-semibold flex flex-col items-center" aria-live="polite">
           <span className="text-lg mb-2">
             🎉 Checkout successful! Thank you for your purchase.
           </span>
           <Link
             href="/"
             className="mt-4 px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition font-bold"
+            aria-label="Go to Homepage"
           >
             Go to Homepage
           </Link>
         </div>
       )}
       {cart.length === 0 && !checkoutSuccess ? (
-        <div className="text-center text-gray-500 bg-white rounded-lg shadow p-8">
+        <div className="text-center text-gray-500 bg-white rounded-lg shadow p-8" aria-live="polite">
           <span className="block mb-2 text-lg">Your cart is empty.</span>
           <Link
             href="/products"
             className="inline-block mt-2 px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+            aria-label="Continue Shopping"
           >
             Continue Shopping
           </Link>
@@ -145,6 +147,7 @@ export default function CartPage() {
                       <Link
                         href={`/products/${item.id}`}
                         className="inline-block mt-2 px-4 py-2 bg-blue-50 text-blue-700 rounded-lg hover:bg-blue-100 transition font-semibold text-sm shadow-sm sm:max-w-32"
+                        aria-label={`View details for ${item.title}`}
                       >
                         View Product
                       </Link>
@@ -152,6 +155,7 @@ export default function CartPage() {
                     <button
                       className="mt-4 sm:mt-0 sm:ml-6 px-5 py-2 bg-red-50 text-red-700 rounded-lg hover:bg-red-100 transition font-bold cursor-pointer w-full sm:w-auto shadow-sm"
                       onClick={() => removeFromCart(item.id)}
+                      aria-label={`Remove ${item.title} from cart`}
                     >
                       Remove
                     </button>
@@ -168,12 +172,14 @@ export default function CartPage() {
                 <button
                   className="bg-gray-100 px-8 py-3 rounded-lg font-bold text-gray-700 border border-gray-300 shadow hover:bg-gray-200 hover:shadow-md transition cursor-pointer"
                   onClick={clearCart}
+                  aria-label="Clear Cart"
                 >
                   🗑️ Clear Cart
                 </button>
                 <button
                   className="bg-gradient-to-r from-blue-600 to-blue-500 text-white px-10 py-3 rounded-lg font-bold shadow hover:from-blue-700 hover:to-blue-600 hover:shadow-lg transition cursor-pointer"
                   onClick={handleCheckout}
+                  aria-label="Proceed to Checkout"
                 >
                   🛒 Checkout
                 </button>
@@ -181,7 +187,7 @@ export default function CartPage() {
             </>
           )}
           {showCheckoutModal && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-2">
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-2" role="dialog" aria-modal="true" aria-label="Checkout Modal">
               <form
                 className="bg-white p-4 sm:p-8 rounded-xl sm:rounded-2xl shadow-2xl w-full max-w-md animate-fade-in overflow-y-auto max-h-[95vh]"
                 onSubmit={handleSubmit}
@@ -191,10 +197,11 @@ export default function CartPage() {
                   Checkout Details
                 </h2>
                 <div className="mb-4">
-                  <label className="block font-semibold mb-1 text-gray-700">
+                  <label className="block font-semibold mb-1 text-gray-700" htmlFor="checkout-name">
                     Name
                   </label>
                   <input
+                    id="checkout-name"
                     name="name"
                     value={form.name}
                     onChange={handleFormChange}
@@ -202,18 +209,21 @@ export default function CartPage() {
                       errors.name ? "border-red-500" : "border-gray-300"
                     }`}
                     placeholder="Your Name"
+                    aria-invalid={!!errors.name}
+                    aria-describedby={errors.name ? "error-name" : undefined}
                   />
                   {errors.name && (
-                    <div className="text-red-600 text-xs mt-1">
+                    <div className="text-red-600 text-xs mt-1" id="error-name">
                       {errors.name}
                     </div>
                   )}
                 </div>
                 <div className="mb-4">
-                  <label className="block font-semibold mb-1 text-gray-700">
+                  <label className="block font-semibold mb-1 text-gray-700" htmlFor="checkout-email">
                     Email
                   </label>
                   <input
+                    id="checkout-email"
                     name="email"
                     type="email"
                     value={form.email}
@@ -222,18 +232,21 @@ export default function CartPage() {
                       errors.email ? "border-red-500" : "border-gray-300"
                     }`}
                     placeholder="you@email.com"
+                    aria-invalid={!!errors.email}
+                    aria-describedby={errors.email ? "error-email" : undefined}
                   />
                   {errors.email && (
-                    <div className="text-red-600 text-xs mt-1">
+                    <div className="text-red-600 text-xs mt-1" id="error-email">
                       {errors.email}
                     </div>
                   )}
                 </div>
                 <div className="mb-4">
-                  <label className="block font-semibold mb-1 text-gray-700">
+                  <label className="block font-semibold mb-1 text-gray-700" htmlFor="checkout-address">
                     Address
                   </label>
                   <input
+                    id="checkout-address"
                     name="address"
                     value={form.address}
                     onChange={handleFormChange}
@@ -241,18 +254,21 @@ export default function CartPage() {
                       errors.address ? "border-red-500" : "border-gray-300"
                     }`}
                     placeholder="Shipping Address"
+                    aria-invalid={!!errors.address}
+                    aria-describedby={errors.address ? "error-address" : undefined}
                   />
                   {errors.address && (
-                    <div className="text-red-600 text-xs mt-1">
+                    <div className="text-red-600 text-xs mt-1" id="error-address">
                       {errors.address}
                     </div>
                   )}
                 </div>
                 <div className="mb-4">
-                  <label className="block font-semibold mb-1 text-gray-700">
+                  <label className="block font-semibold mb-1 text-gray-700" htmlFor="checkout-phone">
                     Phone
                   </label>
                   <input
+                    id="checkout-phone"
                     name="phone"
                     value={form.phone}
                     onChange={handleFormChange}
@@ -260,18 +276,21 @@ export default function CartPage() {
                       errors.phone ? "border-red-500" : "border-gray-300"
                     }`}
                     placeholder="+1234567890"
+                    aria-invalid={!!errors.phone}
+                    aria-describedby={errors.phone ? "error-phone" : undefined}
                   />
                   {errors.phone && (
-                    <div className="text-red-600 text-xs mt-1">
+                    <div className="text-red-600 text-xs mt-1" id="error-phone">
                       {errors.phone}
                     </div>
                   )}
                 </div>
                 <div className="mb-4">
-                  <label className="block font-semibold mb-1 text-gray-700">
+                  <label className="block font-semibold mb-1 text-gray-700" htmlFor="checkout-payment">
                     Payment Method
                   </label>
                   <select
+                    id="checkout-payment"
                     name="payment"
                     value={form.payment}
                     onChange={handleFormChange}
@@ -284,10 +303,11 @@ export default function CartPage() {
                 {form.payment === "visa" && (
                   <>
                     <div className="mb-4">
-                      <label className="block font-semibold mb-1 text-gray-700">
+                      <label className="block font-semibold mb-1 text-gray-700" htmlFor="checkout-cardNumber">
                         Card Number
                       </label>
                       <input
+                        id="checkout-cardNumber"
                         name="cardNumber"
                         value={form.cardNumber}
                         onChange={handleFormChange}
@@ -298,19 +318,22 @@ export default function CartPage() {
                             : "border-gray-300"
                         }`}
                         placeholder="1234123412341234"
+                        aria-invalid={!!errors.cardNumber}
+                        aria-describedby={errors.cardNumber ? "error-cardNumber" : undefined}
                       />
                       {errors.cardNumber && (
-                        <div className="text-red-600 text-xs mt-1">
+                        <div className="text-red-600 text-xs mt-1" id="error-cardNumber">
                           {errors.cardNumber}
                         </div>
                       )}
                     </div>
                     <div className="mb-4 flex gap-2">
                       <div className="flex-1">
-                        <label className="block font-semibold mb-1 text-gray-700">
+                        <label className="block font-semibold mb-1 text-gray-700" htmlFor="checkout-cardExpiry">
                           Expiry (MM/YY)
                         </label>
                         <input
+                          id="checkout-cardExpiry"
                           name="cardExpiry"
                           value={form.cardExpiry}
                           onChange={handleFormChange}
@@ -321,18 +344,21 @@ export default function CartPage() {
                               : "border-gray-300"
                           }`}
                           placeholder="MM/YY"
+                          aria-invalid={!!errors.cardExpiry}
+                          aria-describedby={errors.cardExpiry ? "error-cardExpiry" : undefined}
                         />
                         {errors.cardExpiry && (
-                          <div className="text-red-600 text-xs mt-1">
+                          <div className="text-red-600 text-xs mt-1" id="error-cardExpiry">
                             {errors.cardExpiry}
                           </div>
                         )}
                       </div>
                       <div className="flex-1">
-                        <label className="block font-semibold mb-1 text-gray-700">
+                        <label className="block font-semibold mb-1 text-gray-700" htmlFor="checkout-cardCVC">
                           CVC
                         </label>
                         <input
+                          id="checkout-cardCVC"
                           name="cardCVC"
                           value={form.cardCVC}
                           onChange={handleFormChange}
@@ -343,9 +369,11 @@ export default function CartPage() {
                               : "border-gray-300"
                           }`}
                           placeholder="123"
+                          aria-invalid={!!errors.cardCVC}
+                          aria-describedby={errors.cardCVC ? "error-cardCVC" : undefined}
                         />
                         {errors.cardCVC && (
-                          <div className="text-red-600 text-xs mt-1">
+                          <div className="text-red-600 text-xs mt-1" id="error-cardCVC">
                             {errors.cardCVC}
                           </div>
                         )}
@@ -358,12 +386,14 @@ export default function CartPage() {
                     type="button"
                     className="px-5 py-2 rounded-lg bg-gray-200 font-semibold hover:bg-gray-300 transition cursor-pointer"
                     onClick={() => setShowCheckoutModal(false)}
+                    aria-label="Cancel checkout"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
                     className="px-5 py-2 rounded-lg bg-blue-600 text-white font-bold hover:bg-blue-700 transition cursor-pointer"
+                    aria-label="Confirm Order"
                   >
                     Confirm Order
                   </button>

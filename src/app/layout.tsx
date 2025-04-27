@@ -6,6 +6,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { CartProvider } from "@/context/CartContext";
 import { useState } from "react";
+import ErrorBoundary from "@/components/ErrorBoundary";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -26,10 +27,12 @@ export default function RootLayout({
           }
         >
           {drawerOpen && (
-            <div className="fixed inset-0 z-40 flex md:hidden">
+            <div className="fixed inset-0 z-40 flex md:hidden" aria-label="Mobile navigation drawer">
               <div
                 className="fixed inset-0 bg-black/40 backdrop-blur-sm transition-opacity"
                 onClick={() => setDrawerOpen(false)}
+                aria-label="Close drawer overlay"
+                tabIndex={0}
               ></div>
               <div className="relative bg-white/90 backdrop-blur-lg w-72 h-full shadow-2xl z-50 flex flex-col p-8 rounded-r-2xl animate-slide-in-left border-r border-gray-100">
                 <div className="flex items-center gap-3 mb-10">
@@ -55,6 +58,7 @@ export default function RootLayout({
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
+                    aria-hidden="true"
                   >
                     <path
                       strokeLinecap="round"
@@ -64,7 +68,7 @@ export default function RootLayout({
                     />
                   </svg>
                 </button>
-                <nav className="flex flex-col gap-8 mt-2">
+                <nav className="flex flex-col gap-8 mt-2" aria-label="Mobile main navigation">
                   <Link
                     href="/"
                     className="text-gray-700 hover:text-blue-600 font-semibold text-lg rounded transition-colors duration-150"
@@ -91,11 +95,12 @@ export default function RootLayout({
             </div>
           )}
           <header className="bg-white/80 backdrop-blur-md shadow-md sticky top-0 z-30 border-b border-gray-100">
-            <nav className="px-4 md:px-6 mx-auto max-w-7xl h-20 flex items-center justify-between">
+            <nav className="px-4 md:px-6 mx-auto max-w-7xl h-20 flex items-center justify-between" aria-label="Main navigation">
               <div className="flex items-center gap-4">
                 <Link
                   href="/"
                   className="text-2xl font-extrabold text-gray-900 flex items-center tracking-tight"
+                  aria-label="Go to homepage"
                 >
                   <Image
                     src="/logo.png"
@@ -112,6 +117,7 @@ export default function RootLayout({
                 <Link
                   href="/"
                   className="text-gray-700 hover:text-blue-600 font-semibold transition-colors duration-150"
+                  aria-current="page"
                 >
                   Home
                 </Link>
@@ -138,6 +144,7 @@ export default function RootLayout({
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
+                  aria-hidden="true"
                 >
                   <path
                     strokeLinecap="round"
@@ -150,8 +157,10 @@ export default function RootLayout({
             </nav>
           </header>
 
-          <main className="min-h-[calc(100vh-112px)] bg-transparent px-4 md:px-6 lg:mx-auto max-w-7xl">
-            {children}
+          <main className="min-h-[calc(100vh-112px)] bg-transparent px-4 md:px-6 lg:mx-auto max-w-7xl" role="main">
+            <ErrorBoundary>
+              {children}
+            </ErrorBoundary>
           </main>
 
           <footer className="bg-white/80 backdrop-blur-md border-t border-gray-100 mt-8 shadow-inner">
