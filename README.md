@@ -1,4 +1,14 @@
+# E-Commerce Test App
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+
+## Project Setup
+
+1. **Install dependencies**  
+   Run the following command in your project directory:
+   ```bash
+   npm install
+   ```
 
 ## Getting Started
 
